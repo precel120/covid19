@@ -27,6 +27,7 @@
         }
       ],
       "eqeqeq": [2, "smart"],
+      "react/state-in-constructor": [1, "never"],
       "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
       "prettier/prettier": [
         "error",

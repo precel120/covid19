@@ -1,31 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import GlobalStatisticsTable from './components/GlobalStatisticsTable/GlobalStatisticsTable';
+import CountriesList from './components/CountriesList/CountriesList';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      global: {},
-      countries: [],
-      date: new Date(),
-    };
-  }
+const App = () => {
+  const [global, setGlobal] = useState({});
+  const [countries, setCountries] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
     axios.get('https://api.covid19api.com/summary').then(res => {
       if (res.status === 200) {
-        this.setState(() => ({
-          global: { ...res.data.Global },
-          countries: [...res.data.Countries],
-          date: res.data.Date,
-        }));
+        const { Global, Countries } = res.data;
+        setGlobal({ ...Global });
+        setCountries([...Countries]);
       }
     });
-  }
-
-  render() {
-    return <h1>Hello World</h1>;
-  }
-}
+  }, []);
+  return (
+    <>
+      <h1>COVID19 statistics for day</h1>
+      <GlobalStatisticsTable globalData={global} />
+      <CountriesList countries={countries} />
+    </>
+  );
+};
 
 export default App;
