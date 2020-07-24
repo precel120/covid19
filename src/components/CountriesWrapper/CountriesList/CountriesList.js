@@ -5,8 +5,8 @@ const CountriesList = (props) => {
   const { countries } = props;
   return (
     <ul>
-      {countries.map(country => {
-        return <li>{country.Country}</li>;
+      {countries.map(({ Country, CountryCode }) => {
+        return <li key={CountryCode}>{Country}</li>;
       })}
     </ul>
   );
