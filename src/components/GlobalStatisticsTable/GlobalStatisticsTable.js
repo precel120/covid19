@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const GlobalStatisticsTable = (props) => {
-  const { globalData } = props;
+const GlobalStatisticsTable = ({ globalData }) => {
   const { TotalConfirmed, TotalDeaths, TotalRecovered } = globalData;
   return (
     <table>

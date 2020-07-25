@@ -12,12 +12,13 @@ const App = () => {
   const [countriesToDisplay, setCountriesToDisplay] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [wasFound, setWasFound] = useState(true);
+  const [dataset, setDataset] = useState([]);
   const currentDate = new Date();
 
   useEffect(() => {
-    axios.get('https://api.covid19api.com/summary').then(res => {
-      if (res.status === 200) {
-        const { Global, Countries } = res.data;
+    axios.get('https://api.covid19api.com/summary').then(({ status, data }) => {
+      if (status === 200) {
+        const { Global, Countries } = data;
         setGlobal({ ...Global });
         setCountries([...Countries]);
         setCountriesToDisplay([...Countries]);
@@ -41,7 +42,19 @@ const App = () => {
     setCountriesToDisplay([...countries]);
     if (!wasFound) setWasFound(true);
   };
-  const openModal = () => {
+  const openModal = (openedCountry) => {
+    const displayedCountry = countriesToDisplay.find(
+      (country) => country.Country === openedCountry
+    );
+    axios
+      .get(
+        `https://api.covid19api.com/live/country/${displayedCountry.Slug}/status/confirmed`
+      )
+      .then(({ status, data }) => {
+        if (status === 200) {
+          setDataset([...data]);
+        }
+      });
     setIsModalOpen(true);
   };
   const closeModal = () => {
@@ -52,15 +65,17 @@ const App = () => {
       <h1>COVID19 statistics for day {currentDate.toDateString()}</h1>
       <GlobalStatisticsTable globalData={global} />
       <SearchForm findCountryFn={findCountry} resetSearchFn={resetSearch} />
-      {wasFound ? 
+      {wasFound ? (
         <CountriesWrapper
-        countries={countriesToDisplay}
-        openModalFn={openModal}
+          countries={countriesToDisplay}
+          openModalFn={openModal}
         />
-       : 
+      ) : (
         <div>Cannot find country</div>
-      }
-      {isModalOpen ? <Modal closeModalFn={closeModal} /> : null}
+      )}
+      {isModalOpen ? (
+        <Modal closeModalFn={closeModal} dataset={dataset} />
+      ) : null}
     </div>
   );
 };

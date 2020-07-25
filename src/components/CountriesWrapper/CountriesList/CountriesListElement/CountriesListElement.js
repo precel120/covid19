@@ -4,7 +4,7 @@ import Button from '../../../Button/Button';
 
 const CountriesListElement = ({ keyCode, country, openModalFn }) => (
   <li key={keyCode}>
-    <Button buttonType="button" onClickFn={openModalFn}>
+    <Button buttonType="button" onClickFn={() => openModalFn(country)}>
       {country}
     </Button>
   </li>
