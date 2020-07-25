@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GlobalStatisticsTable from './components/GlobalStatisticsTable/GlobalStatisticsTable';
 import CountriesWrapper from './components/CountriesWrapper/CountriesWrapper';
+import Modal from './components/Modal/Modal';
+import SearchForm from './components/SearchForm/SearchForm';
 
+// TODO global state for ex CountriesListElement
 const App = () => {
   const [global, setGlobal] = useState({});
   const [countries, setCountries] = useState([]);
   const [countriesToDisplay, setCountriesToDisplay] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [wasFound, setWasFound] = useState(true);
   const currentDate = new Date();
 
   useEffect(() => {
@@ -22,24 +27,41 @@ const App = () => {
   const findCountry = (e, countryToFind) => {
     e.preventDefault();
     const foundCountry = countries.find(
-      (country) => country.Country === countryToFind
+      (country) => country.Country.toLowerCase() === countryToFind.toLowerCase()
     );
-    setCountriesToDisplay([foundCountry]);
+    if (foundCountry) {
+      setCountriesToDisplay([foundCountry]);
+      if (!wasFound) setWasFound(true);
+    } else {
+      setWasFound(false);
+    }
   };
   const resetSearch = (e) => {
     e.preventDefault();
     setCountriesToDisplay([...countries]);
+    if (!wasFound) setWasFound(true);
+  };
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
   return (
-    <>
+    <div className="wrapper">
       <h1>COVID19 statistics for day {currentDate.toDateString()}</h1>
       <GlobalStatisticsTable globalData={global} />
-      <CountriesWrapper
+      <SearchForm findCountryFn={findCountry} resetSearchFn={resetSearch} />
+      {wasFound ? 
+        <CountriesWrapper
         countries={countriesToDisplay}
-        findCountryFn={findCountry}
-        resetFn={resetSearch}
-      />
-    </>
+        openModalFn={openModal}
+        />
+       : 
+        <div>Cannot find country</div>
+      }
+      {isModalOpen ? <Modal closeModalFn={closeModal} /> : null}
+    </div>
   );
 };
 
