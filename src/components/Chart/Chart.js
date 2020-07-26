@@ -9,7 +9,7 @@ const Chart = ({ dataset }) => {
   const deaths = [];
   const recovered = [];
   const extractData = () => {
-    dataset.map((item) => {
+    dataset.forEach((item) => {
       dates.push(item.Date);
       confirmed.push(item.Confirmed);
       deaths.push(item.Deaths);
@@ -22,22 +22,25 @@ const Chart = ({ dataset }) => {
       labels: [...dates],
       datasets: [
         {
-          label: 'Confirmed',
-          data: [...confirmed],
-          backgroundColor: ['rgba(75,192,192,0.6)'],
-          borderWitdh: 4,
-        },
-        {
           label: 'Recovered',
           data: [...recovered],
-          backgroundColor: ['rgba(75,150,150,1)'],
+          borderColor: '#3cba9f',
           borderWitdh: 4,
+          fill: false,
         },
         {
           label: 'Deaths',
           data: [...deaths],
-          backgroundColor: ['rgba(192,150,120,1)'],
+          borderColor: '#c45850',
           borderWitdh: 4,
+          fill: false,
+        },
+        {
+          label: 'Confirmed',
+          data: [...confirmed],
+          borderColor: '#3e95cd',
+          borderWitdh: 4,
+          fill: false,
         },
       ],
     });

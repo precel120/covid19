@@ -2,19 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../Button/Button';
 import Chart from '../Chart/Chart';
+import AppContext from '../../context';
 
-const Modal = ({ closeModalFn, dataset }) => (
-  <div className="modal-wrapper">
-    <Button buttonType="button" onClickFn={closeModalFn}>
-      X
-    </Button>
-    {console.log(dataset)}
-    <Chart dataset={dataset} />
-  </div>
+const Modal = ({ dataset }) => (
+  <AppContext.Consumer>
+    {({ closeModal }) => (
+      <div className="modal-wrapper">
+        <Button onClickFn={closeModal}>X</Button>
+        <Chart dataset={dataset} />
+      </div>
+    )}
+  </AppContext.Consumer>
 );
 
 Modal.propTypes = {
-  closeModalFn: PropTypes.func.isRequired,
   dataset: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

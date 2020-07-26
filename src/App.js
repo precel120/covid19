@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GlobalStatisticsTable from './components/GlobalStatisticsTable/GlobalStatisticsTable';
-import CountriesWrapper from './components/CountriesWrapper/CountriesWrapper';
+import CountriesList from './components/CountriesList/CountriesList';
 import Modal from './components/Modal/Modal';
 import SearchForm from './components/SearchForm/SearchForm';
+import AppContext from './context';
 
 // TODO global state for ex CountriesListElement
 const App = () => {
-  const [global, setGlobal] = useState({});
+  const [globalStats, setGlobalStats] = useState({});
   const [countries, setCountries] = useState([]);
   const [countriesToDisplay, setCountriesToDisplay] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,7 @@ const App = () => {
     axios.get('https://api.covid19api.com/summary').then(({ status, data }) => {
       if (status === 200) {
         const { Global, Countries } = data;
-        setGlobal({ ...Global });
+        setGlobalStats({ ...Global });
         setCountries([...Countries]);
         setCountriesToDisplay([...Countries]);
       }
@@ -61,22 +62,28 @@ const App = () => {
     setIsModalOpen(false);
   };
   return (
-    <div className="wrapper">
-      <h1>COVID19 statistics for day {currentDate.toDateString()}</h1>
-      <GlobalStatisticsTable globalData={global} />
-      <SearchForm findCountryFn={findCountry} resetSearchFn={resetSearch} />
-      {wasFound ? (
-        <CountriesWrapper
-          countries={countriesToDisplay}
-          openModalFn={openModal}
-        />
-      ) : (
-        <div>Cannot find country</div>
-      )}
-      {isModalOpen ? (
-        <Modal closeModalFn={closeModal} dataset={dataset} />
-      ) : null}
-    </div>
+    <AppContext.Provider
+      value={{
+        globalStats,
+        findCountry,
+        resetSearch,
+        countriesToDisplay,
+        openModal,
+        closeModal,
+      }}
+    >
+      <div className="wrapper">
+        <h1>COVID19 statistics for day {currentDate.toDateString()}</h1>
+        <GlobalStatisticsTable />
+        <SearchForm />
+        {wasFound ? (
+          <CountriesList countries={countriesToDisplay} />
+        ) : (
+          <div>Cannot find country</div>
+        )}
+        {isModalOpen ? <Modal dataset={dataset} /> : null}
+      </div>
+    </AppContext.Provider>
   );
 };
 

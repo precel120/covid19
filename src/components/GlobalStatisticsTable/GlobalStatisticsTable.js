@@ -1,30 +1,32 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import AppContext from '../../context';
 
-const GlobalStatisticsTable = ({ globalData }) => {
-  const { TotalConfirmed, TotalDeaths, TotalRecovered } = globalData;
+const GlobalStatisticsTable = () => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Total Confirmed</th>
-          <th>Total Deaths</th>
-          <th>Total Recovered</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{TotalConfirmed}</td>
-          <td>{TotalDeaths}</td>
-          <td>{TotalRecovered}</td>
-        </tr>
-      </tbody>
-    </table>
+    <AppContext.Consumer>
+      {({ globalStats }) => {
+        const { TotalConfirmed, TotalDeaths, TotalRecovered } = globalStats;
+        return (
+          <table>
+            <thead>
+              <tr>
+                <th>Total Confirmed</th>
+                <th>Total Deaths</th>
+                <th>Total Recovered</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{TotalConfirmed}</td>
+                <td>{TotalDeaths}</td>
+                <td>{TotalRecovered}</td>
+              </tr>
+            </tbody>
+          </table>
+        );
+      }}
+    </AppContext.Consumer>
   );
-};
-
-GlobalStatisticsTable.propTypes = {
-  globalData: PropTypes.objectOf(PropTypes.number).isRequired,
 };
 
 export default GlobalStatisticsTable;
