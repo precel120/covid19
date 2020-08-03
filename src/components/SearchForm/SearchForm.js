@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import Button from '../Button/Button';
 import AppContext from '../../context';
+import styles from './SearchForm.module.scss';
 
 const SearchForm = () => {
   const [countryName, setCountryName] = useState('');
   return (
     <AppContext.Consumer>
       {({ findCountry, resetSearch }) => (
-        <div className="searchform-wrapper">
+        <div className={styles.wrapper}>
           <form
             autoComplete="off"
             onSubmit={(e) => findCountry(e, countryName)}
           >
             <input
+              className={styles.searchField}
               type="text"
               name="countryToFind"
               value={countryName}

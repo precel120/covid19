@@ -6,7 +6,6 @@ import Modal from './components/Modal/Modal';
 import SearchForm from './components/SearchForm/SearchForm';
 import AppContext from './context';
 
-// TODO global state for ex CountriesListElement
 const App = () => {
   const [globalStats, setGlobalStats] = useState({});
   const [countries, setCountries] = useState([]);
@@ -72,8 +71,10 @@ const App = () => {
         closeModal,
       }}
     >
-      <div className="wrapper">
-        <h1>COVID19 statistics for day {currentDate.toDateString()}</h1>
+      <div>
+        <h1>
+          <span>COVID19</span> statistics for day {currentDate.toDateString()}
+        </h1>
         <GlobalStatisticsTable />
         <SearchForm />
         {wasFound ? (

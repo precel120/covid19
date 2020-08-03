@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CountriesListElement from './CountriesListElement/CountriesListElement';
+import styles from './CountriesList.module.scss';
 
 const CountriesList = ({ countries }) => (
-  <ul>
+  <ul className={styles.wrapper}>
     {countries.map(({ Country, CountryCode }) => (
       <CountriesListElement keyCode={CountryCode} country={Country} />
     ))}
