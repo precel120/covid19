@@ -45,7 +45,7 @@ const Chart = ({ dataset }) => {
       ],
     });
   };
-  // chce create chart w dependency array (React Hook useEffect has a missing dependency: 'createChart'. Either include it or remove the dependency array)
+  // React Hook useEffect has a missing dependency: 'createChart'. Either include it or remove the dependency array
   useEffect(() => {
     createChart();
   }, [dataset]);

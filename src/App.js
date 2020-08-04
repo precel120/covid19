@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GlobalStatisticsTable from './components/GlobalStatisticsTable/GlobalStatisticsTable';
 import CountriesList from './components/CountriesList/CountriesList';
-import Modal from './components/Modal/Modal';
 import SearchForm from './components/SearchForm/SearchForm';
 import AppContext from './context';
 
@@ -10,7 +9,6 @@ const App = () => {
   const [globalStats, setGlobalStats] = useState({});
   const [countries, setCountries] = useState([]);
   const [countriesToDisplay, setCountriesToDisplay] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [wasFound, setWasFound] = useState(true);
   const [dataset, setDataset] = useState([]);
   const currentDate = new Date();
@@ -42,7 +40,7 @@ const App = () => {
     setCountriesToDisplay([...countries]);
     if (!wasFound) setWasFound(true);
   };
-  const openModal = (openedCountry) => {
+  const getDataForChart = (openedCountry) => {
     const displayedCountry = countriesToDisplay.find(
       (country) => country.Country === openedCountry
     );
@@ -55,10 +53,6 @@ const App = () => {
           setDataset([...data]);
         }
       });
-    setIsModalOpen(true);
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
   };
   return (
     <AppContext.Provider
@@ -67,8 +61,8 @@ const App = () => {
         findCountry,
         resetSearch,
         countriesToDisplay,
-        openModal,
-        closeModal,
+        getDataForChart,
+        dataset,
       }}
     >
       <div>
@@ -82,7 +76,6 @@ const App = () => {
         ) : (
           <div>Cannot find country</div>
         )}
-        {isModalOpen ? <Modal dataset={dataset} /> : null}
       </div>
     </AppContext.Provider>
   );

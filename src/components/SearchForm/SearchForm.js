@@ -5,14 +5,20 @@ import styles from './SearchForm.module.scss';
 
 const SearchForm = () => {
   const [countryName, setCountryName] = useState('');
+  const [wasSearched, setWasSearched] = useState(false);
+  const find = (e, findCountry) => {
+    findCountry(e, countryName);
+    if (!wasSearched) setWasSearched(true);
+  };
+  const reset = (e, resetSearch) => {
+    resetSearch(e);
+    if (wasSearched) setWasSearched(false);
+  };
   return (
     <AppContext.Consumer>
       {({ findCountry, resetSearch }) => (
         <div className={styles.wrapper}>
-          <form
-            autoComplete="off"
-            onSubmit={(e) => findCountry(e, countryName)}
-          >
+          <form autoComplete="off" onSubmit={(e) => find(e, findCountry)}>
             <input
               className={styles.searchField}
               type="text"
@@ -23,7 +29,9 @@ const SearchForm = () => {
             />
             <Button buttonType="submit">Search</Button>
           </form>
-          <Button onClickFn={resetSearch}>Reset</Button>
+          {wasSearched ? (
+            <Button onClickFn={(e) => reset(e, resetSearch)}>Reset</Button>
+          ) : null}
         </div>
       )}
     </AppContext.Consumer>
