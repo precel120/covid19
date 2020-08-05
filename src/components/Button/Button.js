@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Button.module.scss';
 
-const Button = ({ children, buttonType, onClickFn }) => {
+const Button = ({ children, buttonType, onClick }) => {
   return buttonType === 'button' ? (
-    <button className={styles.button} type="button" onClick={onClickFn}>
+    <button className={styles.button} type="button" onClick={onClick}>
       {children}
     </button>
   ) : (
@@ -16,7 +16,7 @@ const Button = ({ children, buttonType, onClickFn }) => {
 
 Button.propTypes = {
   buttonType: PropTypes.string,
-  onClickFn: PropTypes.func,
+  onClick: PropTypes.func,
   children: PropTypes.string.isRequired,
 };
 

@@ -14,17 +14,19 @@ const App = () => {
   const currentDate = new Date();
 
   useEffect(() => {
-    axios.get('https://api.covid19api.com/summary').then(({ status, data }) => {
+    const fetchData = async () => {
+      const response = await axios.get('https://api.covid19api.com/summary');
+      const { status, data } = response;
       if (status === 200) {
         const { Global, Countries } = data;
         setGlobalStats({ ...Global });
         setCountries([...Countries]);
         setCountriesToDisplay([...Countries]);
       }
-    });
+    };
+    fetchData();
   }, []);
-  const findCountry = (e, countryToFind) => {
-    e.preventDefault();
+  const findCountry = (countryToFind) => {
     const foundCountry = countries.find(
       (country) => country.Country.toLowerCase() === countryToFind.toLowerCase()
     );
@@ -35,24 +37,19 @@ const App = () => {
       setWasFound(false);
     }
   };
-  const resetSearch = (e) => {
-    e.preventDefault();
+  const resetSearch = () => {
     setCountriesToDisplay([...countries]);
     if (!wasFound) setWasFound(true);
   };
-  const getDataForChart = (openedCountry) => {
+  const getDataForChart = async (openedCountry) => {
     const displayedCountry = countriesToDisplay.find(
       (country) => country.Country === openedCountry
     );
-    axios
-      .get(
-        `https://api.covid19api.com/live/country/${displayedCountry.Slug}/status/confirmed`
-      )
-      .then(({ status, data }) => {
-        if (status === 200) {
-          setDataset([...data]);
-        }
-      });
+    const response = await axios.get(
+      `https://api.covid19api.com/live/country/${displayedCountry.Slug}/status/confirmed`
+    );
+    const { status, data } = response;
+    if (status === 200) setDataset([...data]);
   };
   return (
     <AppContext.Provider

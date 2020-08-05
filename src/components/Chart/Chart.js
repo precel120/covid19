@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Line } from 'react-chartjs-2';
 
 const Chart = ({ dataset }) => {
-  const [chartData, setChartData] = useState({});
   const dates = [];
   const confirmed = [];
   const deaths = [];
@@ -18,7 +17,7 @@ const Chart = ({ dataset }) => {
   };
   const createChart = () => {
     extractData();
-    setChartData({
+    return {
       labels: [...dates],
       datasets: [
         {
@@ -46,12 +45,9 @@ const Chart = ({ dataset }) => {
       options: {
         responsive: true,
       },
-    });
+    };
   };
-  // React Hook useEffect has a missing dependency: 'createChart'. Either include it or remove the dependency array
-  useEffect(() => {
-    createChart();
-  }, [dataset]);
+  const chartData = useMemo(() => createChart(), [createChart]);
   return <Line data={chartData} />;
 };
 

@@ -3,34 +3,44 @@ import Button from '../Button/Button';
 import AppContext from '../../context';
 import styles from './SearchForm.module.scss';
 
+// TODO: FIX Po wyszukaniu, kliknieciu i resecie zostaje chart dla pierwszego
 const SearchForm = () => {
   const [countryName, setCountryName] = useState('');
   const [wasSearched, setWasSearched] = useState(false);
-  const find = (e, findCountry) => {
-    findCountry(e, countryName);
+  const handleSearch = (e, findCountry) => {
+    e.preventDefault();
+    findCountry(countryName);
     if (!wasSearched) setWasSearched(true);
   };
-  const reset = (e, resetSearch) => {
-    resetSearch(e);
+  const handleReset = (e, resetSearch) => {
+    e.preventDefault();
+    resetSearch();
     if (wasSearched) setWasSearched(false);
+  };
+  const handleInput = (e) => {
+    e.preventDefault();
+    setCountryName(e.target.value);
   };
   return (
     <AppContext.Consumer>
       {({ findCountry, resetSearch }) => (
         <div className={styles.wrapper}>
-          <form autoComplete="off" onSubmit={(e) => find(e, findCountry)}>
+          <form
+            autoComplete="off"
+            onSubmit={(e) => handleSearch(e, findCountry)}
+          >
             <input
               className={styles.searchField}
               type="text"
               name="countryToFind"
               value={countryName}
-              onChange={(e) => setCountryName(e.target.value)}
-              onPaste={(e) => setCountryName(e.target.value)}
+              onChange={handleInput}
+              onPaste={handleInput}
             />
             <Button buttonType="submit">Search</Button>
           </form>
           {wasSearched ? (
-            <Button onClickFn={(e) => reset(e, resetSearch)}>Reset</Button>
+            <Button onClick={(e) => handleReset(e, resetSearch)}>Reset</Button>
           ) : null}
         </div>
       )}

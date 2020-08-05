@@ -18,14 +18,14 @@ const CountriesListElement = ({ keyCode, country }) => {
     <AppContext.Consumer>
       {({ getDataForChart, dataset }) => (
         <li className={styles.wrapper} key={keyCode}>
-          <Button onClickFn={() => toggleChart(getDataForChart)}>
+          <Button onClick={() => toggleChart(getDataForChart)}>
             {country}
           </Button>
-          {isClicked ? (
+          {isClicked && (
             <div>
               <Chart dataset={dataset} />
             </div>
-          ) : null}
+          )}
         </li>
       )}
     </AppContext.Consumer>
