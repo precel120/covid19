@@ -39,25 +39,25 @@ const App = () => {
         setWasFound(false);
       }
     },
-    [countries]
+    [countries, setCountriesToDisplay, wasFound, setWasFound]
   );
   const resetSearch = useCallback(() => {
     setCountriesToDisplay([...countries]);
     if (!wasFound) setWasFound(true);
-  }, [countries]);
+  }, [countries, wasFound, setWasFound, setCountriesToDisplay]);
   const getDataForChart = useCallback(
     async (openedCountry) => {
       const displayedCountry = countriesToDisplay.find(
         (country) => country.Country === openedCountry
       );
-      console.log(displayedCountry);
+      // console.log(displayedCountry);
       const response = await axios.get(
         `https://api.covid19api.com/live/country/${displayedCountry.Slug}/status/confirmed`
       );
       const { status, data } = response;
       if (status === 200) setDataset([...data]);
     },
-    [countriesToDisplay]
+    [countriesToDisplay, setDataset]
   );
   return (
     <AppContext.Provider

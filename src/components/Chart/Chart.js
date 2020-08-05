@@ -15,8 +15,8 @@ const Chart = () => {
       deaths.push(item.Deaths);
       recovered.push(item.Recovered);
     });
-  }, [dataset]);
-  const createChart = () => {
+  }, [recovered, confirmed, dates, deaths, dataset]);
+  const createChart = useCallback(() => {
     extractData();
     return {
       labels: [...dates],
@@ -47,8 +47,8 @@ const Chart = () => {
         responsive: true,
       },
     };
-  };
-  const chartData = useMemo(() => createChart(), [dataset]);
+  }, [dates, recovered, deaths, confirmed, extractData]);
+  const chartData = useMemo(() => createChart(), [createChart]);
   return <Line data={chartData} />;
 };
 
