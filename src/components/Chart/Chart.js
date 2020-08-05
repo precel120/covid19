@@ -43,6 +43,9 @@ const Chart = ({ dataset }) => {
           fill: false,
         },
       ],
+      options: {
+        responsive: true,
+      },
     });
   };
   // React Hook useEffect has a missing dependency: 'createChart'. Either include it or remove the dependency array

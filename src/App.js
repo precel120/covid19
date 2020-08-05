@@ -74,7 +74,9 @@ const App = () => {
         {wasFound ? (
           <CountriesList countries={countriesToDisplay} />
         ) : (
-          <div>Cannot find country</div>
+          <div>
+            <h2>Cannot find country</h2>
+          </div>
         )}
       </div>
     </AppContext.Provider>

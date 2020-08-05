@@ -1,5 +1,6 @@
 import React from 'react';
 import AppContext from '../../context';
+import styles from './GlobalStatisticsTable.module.scss';
 
 const GlobalStatisticsTable = () => {
   return (
@@ -7,7 +8,7 @@ const GlobalStatisticsTable = () => {
       {({ globalStats }) => {
         const { TotalConfirmed, TotalDeaths, TotalRecovered } = globalStats;
         return (
-          <table>
+          <table className={styles.wrapper}>
             <thead>
               <tr>
                 <th>Total Confirmed</th>

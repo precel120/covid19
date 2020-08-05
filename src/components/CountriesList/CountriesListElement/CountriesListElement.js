@@ -21,7 +21,11 @@ const CountriesListElement = ({ keyCode, country }) => {
           <Button onClickFn={() => toggleChart(getDataForChart)}>
             {country}
           </Button>
-          {isClicked ? <Chart dataset={dataset} /> : null}
+          {isClicked ? (
+            <div>
+              <Chart dataset={dataset} />
+            </div>
+          ) : null}
         </li>
       )}
     </AppContext.Consumer>
