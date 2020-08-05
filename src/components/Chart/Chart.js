@@ -1,20 +1,21 @@
-import React, { useMemo } from 'react';
-import PropTypes from 'prop-types';
+import React, { useMemo, useContext, useCallback } from 'react';
 import { Line } from 'react-chartjs-2';
+import AppContext from '../../context';
 
-const Chart = ({ dataset }) => {
+const Chart = () => {
+  const { dataset } = useContext(AppContext);
   const dates = [];
   const confirmed = [];
   const deaths = [];
   const recovered = [];
-  const extractData = () => {
+  const extractData = useCallback(() => {
     dataset.forEach((item) => {
       dates.push(item.Date);
       confirmed.push(item.Confirmed);
       deaths.push(item.Deaths);
       recovered.push(item.Recovered);
     });
-  };
+  }, [dataset]);
   const createChart = () => {
     extractData();
     return {
@@ -47,12 +48,8 @@ const Chart = ({ dataset }) => {
       },
     };
   };
-  const chartData = useMemo(() => createChart(), [createChart]);
+  const chartData = useMemo(() => createChart(), [dataset]);
   return <Line data={chartData} />;
-};
-
-Chart.propTypes = {
-  dataset: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Chart;

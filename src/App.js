@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import GlobalStatisticsTable from './components/GlobalStatisticsTable/GlobalStatisticsTable';
 import CountriesList from './components/CountriesList/CountriesList';
@@ -26,31 +26,39 @@ const App = () => {
     };
     fetchData();
   }, []);
-  const findCountry = (countryToFind) => {
-    const foundCountry = countries.find(
-      (country) => country.Country.toLowerCase() === countryToFind.toLowerCase()
-    );
-    if (foundCountry) {
-      setCountriesToDisplay([foundCountry]);
-      if (!wasFound) setWasFound(true);
-    } else {
-      setWasFound(false);
-    }
-  };
-  const resetSearch = () => {
+  const findCountry = useCallback(
+    (countryToFind) => {
+      const foundCountry = countries.find(
+        (country) =>
+          country.Country.toLowerCase() === countryToFind.toLowerCase()
+      );
+      if (foundCountry) {
+        setCountriesToDisplay([foundCountry]);
+        if (!wasFound) setWasFound(true);
+      } else {
+        setWasFound(false);
+      }
+    },
+    [countries]
+  );
+  const resetSearch = useCallback(() => {
     setCountriesToDisplay([...countries]);
     if (!wasFound) setWasFound(true);
-  };
-  const getDataForChart = async (openedCountry) => {
-    const displayedCountry = countriesToDisplay.find(
-      (country) => country.Country === openedCountry
-    );
-    const response = await axios.get(
-      `https://api.covid19api.com/live/country/${displayedCountry.Slug}/status/confirmed`
-    );
-    const { status, data } = response;
-    if (status === 200) setDataset([...data]);
-  };
+  }, [countries]);
+  const getDataForChart = useCallback(
+    async (openedCountry) => {
+      const displayedCountry = countriesToDisplay.find(
+        (country) => country.Country === openedCountry
+      );
+      console.log(displayedCountry);
+      const response = await axios.get(
+        `https://api.covid19api.com/live/country/${displayedCountry.Slug}/status/confirmed`
+      );
+      const { status, data } = response;
+      if (status === 200) setDataset([...data]);
+    },
+    [countriesToDisplay]
+  );
   return (
     <AppContext.Provider
       value={{

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../Button/Button';
 import AppContext from '../../../context';
@@ -7,7 +7,8 @@ import styles from './CountriesListElement.module.scss';
 
 const CountriesListElement = ({ keyCode, country }) => {
   const [isClicked, setIsClicked] = useState(false);
-  const toggleChart = (getDataForChart) => {
+  const { getDataForChart } = useContext(AppContext);
+  const toggleChart = () => {
     if (isClicked) setIsClicked(false);
     else {
       getDataForChart(country);
@@ -15,20 +16,14 @@ const CountriesListElement = ({ keyCode, country }) => {
     }
   };
   return (
-    <AppContext.Consumer>
-      {({ getDataForChart, dataset }) => (
-        <li className={styles.wrapper} key={keyCode}>
-          <Button onClick={() => toggleChart(getDataForChart)}>
-            {country}
-          </Button>
-          {isClicked && (
-            <div>
-              <Chart dataset={dataset} />
-            </div>
-          )}
-        </li>
+    <li className={styles.wrapper} key={keyCode}>
+      <Button onClick={toggleChart}>{country}</Button>
+      {isClicked && (
+        <div>
+          <Chart />
+        </div>
       )}
-    </AppContext.Consumer>
+    </li>
   );
 };
 

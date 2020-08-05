@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Button from '../Button/Button';
 import AppContext from '../../context';
 import styles from './SearchForm.module.scss';
@@ -7,12 +7,13 @@ import styles from './SearchForm.module.scss';
 const SearchForm = () => {
   const [countryName, setCountryName] = useState('');
   const [wasSearched, setWasSearched] = useState(false);
-  const handleSearch = (e, findCountry) => {
+  const { findCountry, resetSearch } = useContext(AppContext);
+  const handleSearch = (e) => {
     e.preventDefault();
     findCountry(countryName);
     if (!wasSearched) setWasSearched(true);
   };
-  const handleReset = (e, resetSearch) => {
+  const handleReset = (e) => {
     e.preventDefault();
     resetSearch();
     if (wasSearched) setWasSearched(false);
@@ -22,29 +23,20 @@ const SearchForm = () => {
     setCountryName(e.target.value);
   };
   return (
-    <AppContext.Consumer>
-      {({ findCountry, resetSearch }) => (
-        <div className={styles.wrapper}>
-          <form
-            autoComplete="off"
-            onSubmit={(e) => handleSearch(e, findCountry)}
-          >
-            <input
-              className={styles.searchField}
-              type="text"
-              name="countryToFind"
-              value={countryName}
-              onChange={handleInput}
-              onPaste={handleInput}
-            />
-            <Button buttonType="submit">Search</Button>
-          </form>
-          {wasSearched ? (
-            <Button onClick={(e) => handleReset(e, resetSearch)}>Reset</Button>
-          ) : null}
-        </div>
-      )}
-    </AppContext.Consumer>
+    <div className={styles.wrapper}>
+      <form autoComplete="off" onSubmit={handleSearch}>
+        <input
+          className={styles.searchField}
+          type="text"
+          name="countryToFind"
+          value={countryName}
+          onChange={handleInput}
+          onPaste={handleInput}
+        />
+        <Button buttonType="submit">Search</Button>
+      </form>
+      {wasSearched ? <Button onClick={handleReset}>Reset</Button> : null}
+    </div>
   );
 };
 
