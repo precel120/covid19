@@ -1,5 +1,5 @@
 import React, { useState, useContext, useCallback } from 'react';
-import Button from '../Button/Button';
+import { Button, Input } from '@material-ui/core';
 import AppContext from '../../context';
 import styles from './SearchForm.module.scss';
 
@@ -33,16 +33,20 @@ const SearchForm = () => {
   return (
     <div className={styles.wrapper}>
       <form autoComplete="off" onSubmit={handleSearch}>
-        <input
-          className={styles.searchField}
-          type="text"
+        <Input
           name="countryToFind"
           value={countryName}
           onChange={handleInput}
           onPaste={handleInput}
         />
-        <Button buttonType="submit">Search</Button>
-        {wasSearched ? <Button onClick={handleReset}>Reset</Button> : null}
+        <Button variant="contained" type="submit">
+          Search
+        </Button>
+        {wasSearched ? (
+          <Button variant="contained" type="button" onClick={handleReset}>
+            Reset
+          </Button>
+        ) : null}
       </form>
     </div>
   );

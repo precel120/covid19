@@ -8,15 +8,9 @@
 
 body {
   margin: 0;
-  background-color: black;
   font-family: "Montserrat", sans-serif;
-  h1 {
-    color: white;
-    span {
-      color: red;
-    }
-  }
-  h2 {
-    color: white;
+  text-align: center;
+  h1 span{
+    color: red;
   }
 }

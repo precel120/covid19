@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { List, ListSubheader, Container, Grid, Box } from '@material-ui/core';
 import GlobalStatisticsTable from './components/GlobalStatisticsTable/GlobalStatisticsTable';
 import CountriesListItem from './components/CountriesListItem/CountriesListItem';
 import SearchForm from './components/SearchForm/SearchForm';
@@ -76,26 +77,45 @@ const App = () => {
       }}
     >
       <div>
-        <h1>
-          <span>COVID19</span> statistics for day {currentDate.toDateString()}
-        </h1>
-        <GlobalStatisticsTable />
-        <SearchForm />
-        <ul>
-          {wasFound ? (
-            countriesToDisplay.map(({ Country, CountryCode }) => (
-              <CountriesListItem
-                getDataForChart={getDataForChart}
-                keyCode={CountryCode}
-                country={Country}
-                showChart={currentlyShowedChart === Country}
-                onClick={toggleChart}
-              />
-            ))
-          ) : (
-            <h2>Cannot find country</h2>
-          )}
-        </ul>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <h1>
+              COVID-<span>19</span> statistics for day{' '}
+              {currentDate.toDateString()}
+            </h1>
+          </Grid>
+          <Grid item xs={12}>
+            <Container maxWidth="sm">
+              <GlobalStatisticsTable />
+            </Container>
+          </Grid>
+          <Grid item xs={12}>
+            <SearchForm />
+          </Grid>
+          <Grid item xs={12}>
+            <List
+              subheader={
+                <ListSubheader component="div" style={{ textAlign: 'center' }}>
+                  Countries
+                </ListSubheader>
+              }
+            >
+              {wasFound ? (
+                countriesToDisplay.map(({ Country, CountryCode }) => (
+                  <CountriesListItem
+                    key={CountryCode}
+                    getDataForChart={getDataForChart}
+                    country={Country}
+                    showChart={currentlyShowedChart === Country}
+                    onClick={toggleChart}
+                  />
+                ))
+              ) : (
+                <h2>Cannot find country</h2>
+              )}
+            </List>
+          </Grid>
+        </Grid>
       </div>
     </AppContext.Provider>
   );
