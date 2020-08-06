@@ -3,7 +3,6 @@ import Button from '../Button/Button';
 import AppContext from '../../context';
 import styles from './SearchForm.module.scss';
 
-// TODO: FIX Po wyszukaniu, kliknieciu i resecie zostaje chart dla pierwszego
 const SearchForm = () => {
   const [countryName, setCountryName] = useState('');
   const [wasSearched, setWasSearched] = useState(false);
@@ -43,8 +42,8 @@ const SearchForm = () => {
           onPaste={handleInput}
         />
         <Button buttonType="submit">Search</Button>
+        {wasSearched ? <Button onClick={handleReset}>Reset</Button> : null}
       </form>
-      {wasSearched ? <Button onClick={handleReset}>Reset</Button> : null}
     </div>
   );
 };

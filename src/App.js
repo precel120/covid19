@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import GlobalStatisticsTable from './components/GlobalStatisticsTable/GlobalStatisticsTable';
-import CountriesList from './components/CountriesList/CountriesList';
+import CountriesListItem from './components/CountriesListItem/CountriesListItem';
 import SearchForm from './components/SearchForm/SearchForm';
 import AppContext from './context';
 
@@ -11,6 +11,7 @@ const App = () => {
   const [countriesToDisplay, setCountriesToDisplay] = useState([]);
   const [wasFound, setWasFound] = useState(true);
   const [dataset, setDataset] = useState([]);
+  const [currentlyShowedChart, setCurrentlyShowedChart] = useState('');
   const currentDate = new Date();
 
   useEffect(() => {
@@ -38,19 +39,20 @@ const App = () => {
       } else {
         setWasFound(false);
       }
+      setCurrentlyShowedChart('');
     },
     [countries, setCountriesToDisplay, wasFound, setWasFound]
   );
   const resetSearch = useCallback(() => {
     setCountriesToDisplay([...countries]);
+    setCurrentlyShowedChart('');
     if (!wasFound) setWasFound(true);
-  }, [countries, wasFound, setWasFound, setCountriesToDisplay]);
+  }, [countries, setCountriesToDisplay, wasFound, setWasFound]);
   const getDataForChart = useCallback(
     async (openedCountry) => {
       const displayedCountry = countriesToDisplay.find(
         (country) => country.Country === openedCountry
       );
-      // console.log(displayedCountry);
       const response = await axios.get(
         `https://api.covid19api.com/live/country/${displayedCountry.Slug}/status/confirmed`
       );
@@ -59,6 +61,10 @@ const App = () => {
     },
     [countriesToDisplay, setDataset]
   );
+  const toggleChart = useCallback((Country, showChart) => {
+    if (showChart) setCurrentlyShowedChart('');
+    else setCurrentlyShowedChart(Country);
+  }, []);
   return (
     <AppContext.Provider
       value={{
@@ -66,7 +72,6 @@ const App = () => {
         findCountry,
         resetSearch,
         countriesToDisplay,
-        getDataForChart,
         dataset,
       }}
     >
@@ -76,13 +81,21 @@ const App = () => {
         </h1>
         <GlobalStatisticsTable />
         <SearchForm />
-        {wasFound ? (
-          <CountriesList countries={countriesToDisplay} />
-        ) : (
-          <div>
+        <ul>
+          {wasFound ? (
+            countriesToDisplay.map(({ Country, CountryCode }) => (
+              <CountriesListItem
+                getDataForChart={getDataForChart}
+                keyCode={CountryCode}
+                country={Country}
+                showChart={currentlyShowedChart === Country}
+                onClick={toggleChart}
+              />
+            ))
+          ) : (
             <h2>Cannot find country</h2>
-          </div>
-        )}
+          )}
+        </ul>
       </div>
     </AppContext.Provider>
   );
