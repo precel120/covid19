@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { List, ListSubheader, Container, Grid, Box } from '@material-ui/core';
-import GlobalStatisticsTable from './components/GlobalStatisticsTable/GlobalStatisticsTable';
+import { List, ListSubheader, Grid, Container } from '@material-ui/core';
+import GlobalStatistics from './components/GlobalStatistics/GlobalStatistics';
 import CountriesListItem from './components/CountriesListItem/CountriesListItem';
 import SearchForm from './components/SearchForm/SearchForm';
 import AppContext from './context';
+import Chart from './components/Chart/Chart';
 
 const App = () => {
   const [globalStats, setGlobalStats] = useState({});
@@ -15,40 +16,6 @@ const App = () => {
   const [currentlyShowedChart, setCurrentlyShowedChart] = useState('');
   const currentDate = new Date();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get('https://api.covid19api.com/summary');
-      const { status, data } = response;
-      if (status === 200) {
-        const { Global, Countries } = data;
-        setGlobalStats({ ...Global });
-        setCountries([...Countries]);
-        setCountriesToDisplay([...Countries]);
-      }
-    };
-    fetchData();
-  }, []);
-  const findCountry = useCallback(
-    (countryToFind) => {
-      const foundCountry = countries.find(
-        (country) =>
-          country.Country.toLowerCase() === countryToFind.toLowerCase()
-      );
-      if (foundCountry) {
-        setCountriesToDisplay([foundCountry]);
-        if (!wasFound) setWasFound(true);
-      } else {
-        setWasFound(false);
-      }
-      setCurrentlyShowedChart('');
-    },
-    [countries, setCountriesToDisplay, wasFound, setWasFound]
-  );
-  const resetSearch = useCallback(() => {
-    setCountriesToDisplay([...countries]);
-    setCurrentlyShowedChart('');
-    if (!wasFound) setWasFound(true);
-  }, [countries, setCountriesToDisplay, wasFound, setWasFound]);
   const getDataForChart = useCallback(
     async (openedCountry) => {
       const displayedCountry = countriesToDisplay.find(
@@ -62,10 +29,55 @@ const App = () => {
     },
     [countriesToDisplay, setDataset]
   );
-  const toggleChart = useCallback((Country, showChart) => {
-    if (showChart) setCurrentlyShowedChart('');
-    else setCurrentlyShowedChart(Country);
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get('https://api.covid19api.com/summary');
+      const { status, data } = response;
+      if (status === 200) {
+        const { Global, Countries } = data;
+        setGlobalStats({ ...Global });
+        setCountries([...Countries]);
+        setCountriesToDisplay([...Countries]);
+      }
+    };
+    fetchData();
+    getDataForChart("Afghanistan");
+    // setCurrentlyShowedChart(countries[0].Country);
   }, []);
+  const handleChart = useCallback((Country) => {
+    setCurrentlyShowedChart(Country);
+  }, []);
+  const findCountry = useCallback(
+    (countryToFind) => {
+      const foundCountry = countries.find(
+        (country) =>
+          country.Country.toLowerCase() === countryToFind.toLowerCase()
+      );
+      if (foundCountry) {
+        setCountriesToDisplay([foundCountry]);
+        console.log(foundCountry);
+        if (!wasFound) setWasFound(true);
+        getDataForChart(countryToFind);
+        setCurrentlyShowedChart(countryToFind);
+      } else {
+        setWasFound(false);
+      }
+    },
+    [
+      countries,
+      setCountriesToDisplay,
+      getDataForChart,
+      setCurrentlyShowedChart,
+      wasFound,
+      setWasFound,
+    ]
+  );
+  const resetSearch = useCallback(() => {
+    setCountriesToDisplay([...countries]);
+    // getDataForChart(countries[0].Country);
+    // setCurrentlyShowedChart(countries[0].Country);
+    if (!wasFound) setWasFound(true);
+  }, [countries, setCountriesToDisplay, wasFound, setWasFound]);
   return (
     <AppContext.Provider
       value={{
@@ -78,27 +90,26 @@ const App = () => {
     >
       <div>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <h1>
               COVID-<span>19</span> statistics for day{' '}
               {currentDate.toDateString()}
             </h1>
           </Grid>
-          <Grid item xs={12}>
-            <Container maxWidth="sm">
-              <GlobalStatisticsTable />
+          <Grid item xs={9}>
+            <Container>
+              <GlobalStatistics />
             </Container>
           </Grid>
-          <Grid item xs={12}>
-            <SearchForm />
-          </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
+            <Container>
+              <SearchForm />
+            </Container>
             <List
               subheader={
-                <ListSubheader component="div" style={{ textAlign: 'center' }}>
-                  Countries
-                </ListSubheader>
+                <ListSubheader component="div">Countries</ListSubheader>
               }
+              style={{ overflow: 'scroll', maxHeight: '100vh' }}
             >
               {wasFound ? (
                 countriesToDisplay.map(({ Country, CountryCode }) => (
@@ -107,13 +118,16 @@ const App = () => {
                     getDataForChart={getDataForChart}
                     country={Country}
                     showChart={currentlyShowedChart === Country}
-                    onClick={toggleChart}
+                    onClick={handleChart}
                   />
                 ))
               ) : (
                 <h2>Cannot find country</h2>
               )}
             </List>
+          </Grid>
+          <Grid item xs={9}>
+            <Chart />
           </Grid>
         </Grid>
       </div>
