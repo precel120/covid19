@@ -1,5 +1,7 @@
 import React, { useState, useContext, useCallback } from 'react';
-import { Button, Input } from '@material-ui/core';
+import { OutlinedInput, IconButton } from '@material-ui/core';
+import ClearSharpIcon from '@material-ui/icons/ClearSharp';
+import SearchSharpIcon from '@material-ui/icons/SearchSharp';
 import AppContext from '../../context';
 import styles from './SearchForm.module.scss';
 
@@ -33,23 +35,20 @@ const SearchForm = () => {
   return (
     <div className={styles.wrapper}>
       <form autoComplete="off" onSubmit={handleSearch}>
-        <Input
+        <OutlinedInput
           name="countryToFind"
+          placeholder="Search"
+          id="outlined-adornment-amount"
           value={countryName}
           onChange={handleInput}
           onPaste={handleInput}
         />
-        <Button variant="contained" type="submit">
-          Search
-        </Button>
-        <Button
-          variant="contained"
-          type="button"
-          onClick={handleReset}
-          disabled={!wasSearched}
-        >
-          Reset
-        </Button>
+        <IconButton type="submit">
+          <SearchSharpIcon />
+        </IconButton>
+        <IconButton type="button" onClick={handleReset} disabled={!wasSearched}>
+          <ClearSharpIcon />
+        </IconButton>
       </form>
     </div>
   );

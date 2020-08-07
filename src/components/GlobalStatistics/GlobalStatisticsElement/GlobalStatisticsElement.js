@@ -6,10 +6,12 @@ const GlobalStatisticsElement = ({ title, value, color }) => (
   <Grid item style={{ marginTop: '20px' }}>
     <Card style={{ backgroundColor: color, color: 'white' }}>
       <CardContent>
-        <Typography variant="h5" component="h2">
+        <Typography variant="h6" component="h2" gutterBottom>
           {title} <br /> Globally
         </Typography>
-        <Typography component="p">{value}</Typography>
+        <Typography variant="h4" component="h3">
+          {value}
+        </Typography>
       </CardContent>
     </Card>
   </Grid>

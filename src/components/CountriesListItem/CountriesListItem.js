@@ -1,6 +1,12 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { ListItem, ListItemText } from '@material-ui/core';
+import {
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Typography,
+  Avatar,
+} from '@material-ui/core';
 
 const CountriesListItem = ({
   onClick,
@@ -8,6 +14,7 @@ const CountriesListItem = ({
   country,
   index,
   selectedIndex,
+  countryCode,
 }) => {
   const handleClick = useCallback(
     (event) => {
@@ -19,7 +26,12 @@ const CountriesListItem = ({
   return (
     <>
       <ListItem button onClick={handleClick} selected={selectedIndex === index}>
-        <ListItemText primary={country} style={{ textAlign: 'center' }} />
+        <ListItemText primary={<Typography>{country}</Typography>} />
+        <ListItemAvatar>
+          <Avatar
+            src={`https://www.countryflags.io/${countryCode}/flat/64.png`}
+          />
+        </ListItemAvatar>
       </ListItem>
     </>
   );
@@ -31,6 +43,7 @@ CountriesListItem.propTypes = {
   getDataForChart: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   selectedIndex: PropTypes.number.isRequired,
+  countryCode: PropTypes.string.isRequired,
 };
 
 export default CountriesListItem;

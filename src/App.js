@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { List, ListSubheader, Grid, Container } from '@material-ui/core';
+import {
+  List,
+  ListSubheader,
+  Grid,
+  Container,
+  Typography,
+} from '@material-ui/core';
 import GlobalStatistics from './components/GlobalStatistics/GlobalStatistics';
 import CountriesListItem from './components/CountriesListItem/CountriesListItem';
 import SearchForm from './components/SearchForm/SearchForm';
@@ -85,10 +91,13 @@ const App = () => {
       <div>
         <Grid container spacing={2}>
           <Grid item xs={3}>
-            <h1>
-              COVID-<span>19</span> statistics for day{' '}
-              {currentDate.toDateString()}
-            </h1>
+            <Typography
+              variant="h4"
+              component="h1"
+              style={{ margin: '30px 0 0 30px', fontWeight: '700' }}
+            >
+              COVID-<span>19</span> statistics for {currentDate.toDateString()}
+            </Typography>
           </Grid>
           <Grid item xs={9}>
             <Container>
@@ -115,6 +124,7 @@ const App = () => {
                     key={CountryCode}
                     getDataForChart={getDataForChart}
                     country={Country}
+                    countryCode={CountryCode}
                     showChart={currentlyShowedChart === Country}
                     onClick={handleChart}
                     index={index}
@@ -127,7 +137,7 @@ const App = () => {
             </List>
           </Grid>
           <Grid item xs={9}>
-            <Container maxWidth="false" style={{ paddingLeft: '0' }}>
+            <Container style={{ paddingLeft: '0' }} maxWidth="xl">
               <Chart />
             </Container>
           </Grid>
