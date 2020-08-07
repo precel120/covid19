@@ -73,6 +73,7 @@ const App = () => {
       );
       if (foundCountries) {
         setCountriesToDisplay([...foundCountries]);
+        setSelectedIndex(null);
         if (!wasFound) setWasFound(true);
         // getDataForChart(countryToFind);
         // setCurrentlyShowedChart(countryToFind);
@@ -80,15 +81,28 @@ const App = () => {
         setWasFound(false);
       }
     },
-    [countries, setCountriesToDisplay, wasFound, setWasFound]
+    [
+      countries,
+      setCurrentlyShowedChart,
+      setCountriesToDisplay,
+      wasFound,
+      setWasFound,
+    ]
   );
 
   const resetSearch = useCallback(() => {
     setCountriesToDisplay([...countries]);
+    setSelectedIndex(null);
     // getDataForChart(countries[0].Country);
     // setCurrentlyShowedChart(countries[0].Country);
     if (!wasFound) setWasFound(true);
-  }, [countries, setCountriesToDisplay, wasFound, setWasFound]);
+  }, [
+    countries,
+    setCurrentlyShowedChart,
+    setCountriesToDisplay,
+    wasFound,
+    setWasFound,
+  ]);
 
   const handleChart = useCallback((event, Country, index) => {
     setCurrentlyShowedChart(Country);

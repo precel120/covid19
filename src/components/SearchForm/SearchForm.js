@@ -11,6 +11,7 @@ const SearchForm = () => {
     (e) => {
       e.preventDefault();
       resetSearch();
+      setCountryName('');
     },
     [resetSearch]
   );
