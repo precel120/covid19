@@ -7,7 +7,7 @@ const GlobalStatisticsElement = ({ title, value, color }) => (
     style={{
       backgroundColor: color,
       color: 'white',
-      margin: '10px',
+      margin: '10px 15px',
       height: '100%',
     }}
   >

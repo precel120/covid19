@@ -21,7 +21,12 @@ const App = () => {
   const [wasFound, setWasFound] = useState(true);
   const [dataset, setDataset] = useState([]);
   const [currentlyShowedChart, setCurrentlyShowedChart] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [dimensions, setDimensions] = React.useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
+
   const currentDate = new Date();
 
   const getDataForChart = useCallback(
@@ -37,7 +42,15 @@ const App = () => {
     },
     [countriesToDisplay, setDataset]
   );
+
   useEffect(() => {
+    function handleResize() {
+      setDimensions({
+        height: window.innerHeight,
+        width: window.innerWidth
+      });
+    }
+    window.addEventListener('resize', handleResize);
     const fetchData = async () => {
       const response = await axios.get('https://api.covid19api.com/summary');
       const { status, data } = response;
@@ -52,6 +65,7 @@ const App = () => {
     // getDataForChart("Afghanistan");
     // setCurrentlyShowedChart(countries[0].Country);
   }, []);
+
   const findCountry = useCallback(
     (countryToFind) => {
       const foundCountries = countries.filter((country) =>
@@ -68,16 +82,19 @@ const App = () => {
     },
     [countries, setCountriesToDisplay, wasFound, setWasFound]
   );
+
   const resetSearch = useCallback(() => {
     setCountriesToDisplay([...countries]);
     // getDataForChart(countries[0].Country);
     // setCurrentlyShowedChart(countries[0].Country);
     if (!wasFound) setWasFound(true);
   }, [countries, setCountriesToDisplay, wasFound, setWasFound]);
+
   const handleChart = useCallback((event, Country, index) => {
     setCurrentlyShowedChart(Country);
     setSelectedIndex(index);
   }, []);
+
   return (
     <AppContext.Provider
       value={{
@@ -102,13 +119,22 @@ const App = () => {
           <Grid item xs={12} sm={9}>
             <GlobalStatistics />
           </Grid>
-          <Grid item xs={6} sm={3}>
+          {dimensions.width <= 600 && (
+            <Grid item xs={12}>
+              <Container style={{ paddingLeft: '0' }} maxWidth="xl">
+                <Chart />
+              </Container>
+            </Grid>
+          )}
+          <Grid item xs={12} sm={3}>
             <Box width="90%">
               <SearchForm />
             </Box>
             <List
               subheader={
-                <ListSubheader component="div">Countries</ListSubheader>
+                <ListSubheader style={{ textAlign: 'center' }}>
+                  Countries
+                </ListSubheader>
               }
               style={{
                 overflowX: 'hidden',
@@ -116,7 +142,7 @@ const App = () => {
                 height: '70vh',
               }}
             >
-              {wasFound ? (
+              {wasFound &&
                 countriesToDisplay.map(({ Country, CountryCode }, index) => (
                   <CountriesListItem
                     key={CountryCode}
@@ -128,17 +154,16 @@ const App = () => {
                     index={index}
                     selectedIndex={selectedIndex}
                   />
-                ))
-              ) : (
-                <h2>Cannot find country</h2>
-              )}
+                ))}
             </List>
           </Grid>
-          <Grid item xs={6} sm={9}>
-            <Container style={{ paddingLeft: '0' }} maxWidth="xl">
-              <Chart />
-            </Container>
-          </Grid>
+          {dimensions.width > 600 && (
+            <Grid item sm={9}>
+              <Container style={{ paddingLeft: '0' }} maxWidth="xl">
+                <Chart />
+              </Container>
+            </Grid>
+          )}
         </Grid>
       </div>
     </AppContext.Provider>
