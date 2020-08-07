@@ -6,6 +6,7 @@ import {
   Grid,
   Container,
   Typography,
+  Box,
 } from '@material-ui/core';
 import GlobalStatistics from './components/GlobalStatistics/GlobalStatistics';
 import CountriesListItem from './components/CountriesListItem/CountriesListItem';
@@ -53,12 +54,11 @@ const App = () => {
   }, []);
   const findCountry = useCallback(
     (countryToFind) => {
-      const foundCountry = countries.find(
-        (country) =>
-          country.Country.toLowerCase() === countryToFind.toLowerCase()
+      const foundCountries = countries.filter((country) =>
+        country.Country.includes(countryToFind)
       );
-      if (foundCountry) {
-        setCountriesToDisplay([foundCountry]);
+      if (foundCountries) {
+        setCountriesToDisplay([...foundCountries]);
         if (!wasFound) setWasFound(true);
         // getDataForChart(countryToFind);
         // setCurrentlyShowedChart(countryToFind);
@@ -90,7 +90,7 @@ const App = () => {
     >
       <div>
         <Grid container spacing={2}>
-          <Grid item xs={3}>
+          <Grid item xs={12} sm={3}>
             <Typography
               variant="h4"
               component="h1"
@@ -99,15 +99,13 @@ const App = () => {
               COVID-<span>19</span> statistics for {currentDate.toDateString()}
             </Typography>
           </Grid>
-          <Grid item xs={9}>
-            <Container>
-              <GlobalStatistics />
-            </Container>
+          <Grid item xs={12} sm={9}>
+            <GlobalStatistics />
           </Grid>
-          <Grid item xs={3}>
-            <Container>
+          <Grid item xs={6} sm={3}>
+            <Box width="90%">
               <SearchForm />
-            </Container>
+            </Box>
             <List
               subheader={
                 <ListSubheader component="div">Countries</ListSubheader>
@@ -136,7 +134,7 @@ const App = () => {
               )}
             </List>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={6} sm={9}>
             <Container style={{ paddingLeft: '0' }} maxWidth="xl">
               <Chart />
             </Container>
