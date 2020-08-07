@@ -42,11 +42,14 @@ const SearchForm = () => {
         <Button variant="contained" type="submit">
           Search
         </Button>
-        {wasSearched ? (
-          <Button variant="contained" type="button" onClick={handleReset}>
-            Reset
-          </Button>
-        ) : null}
+        <Button
+          variant="contained"
+          type="button"
+          onClick={handleReset}
+          disabled={!wasSearched}
+        >
+          Reset
+        </Button>
       </form>
     </div>
   );

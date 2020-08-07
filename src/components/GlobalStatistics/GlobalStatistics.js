@@ -7,18 +7,18 @@ const GlobalStatistics = () => {
   const { globalStats } = useContext(AppContext);
   const { TotalConfirmed, TotalDeaths, TotalRecovered } = globalStats;
   return (
-    <Grid container spacing={2}>
-      <GlobalStatisticsElement title="Total Confirmed" value={TotalConfirmed} />
+    <Grid container spacing={4}>
+      <GlobalStatisticsElement
+        title="Total Confirmed"
+        color="#3e95cd"
+        value={TotalConfirmed}
+      />
       <GlobalStatisticsElement
         title="Total Deaths"
         value={TotalDeaths}
         color="#c45850"
       />
-      <GlobalStatisticsElement
-        title="Total Recovered"
-        value={TotalRecovered}
-        color="#3e95cd"
-      />
+      <GlobalStatisticsElement title="Total Recovered" value={TotalRecovered} />
     </Grid>
   );
 };

@@ -14,6 +14,7 @@ const App = () => {
   const [wasFound, setWasFound] = useState(true);
   const [dataset, setDataset] = useState([]);
   const [currentlyShowedChart, setCurrentlyShowedChart] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const currentDate = new Date();
 
   const getDataForChart = useCallback(
@@ -41,11 +42,8 @@ const App = () => {
       }
     };
     fetchData();
-    getDataForChart("Afghanistan");
+    // getDataForChart("Afghanistan");
     // setCurrentlyShowedChart(countries[0].Country);
-  }, []);
-  const handleChart = useCallback((Country) => {
-    setCurrentlyShowedChart(Country);
   }, []);
   const findCountry = useCallback(
     (countryToFind) => {
@@ -55,22 +53,14 @@ const App = () => {
       );
       if (foundCountry) {
         setCountriesToDisplay([foundCountry]);
-        console.log(foundCountry);
         if (!wasFound) setWasFound(true);
-        getDataForChart(countryToFind);
-        setCurrentlyShowedChart(countryToFind);
+        // getDataForChart(countryToFind);
+        // setCurrentlyShowedChart(countryToFind);
       } else {
         setWasFound(false);
       }
     },
-    [
-      countries,
-      setCountriesToDisplay,
-      getDataForChart,
-      setCurrentlyShowedChart,
-      wasFound,
-      setWasFound,
-    ]
+    [countries, setCountriesToDisplay, wasFound, setWasFound]
   );
   const resetSearch = useCallback(() => {
     setCountriesToDisplay([...countries]);
@@ -78,6 +68,10 @@ const App = () => {
     // setCurrentlyShowedChart(countries[0].Country);
     if (!wasFound) setWasFound(true);
   }, [countries, setCountriesToDisplay, wasFound, setWasFound]);
+  const handleChart = useCallback((event, Country, index) => {
+    setCurrentlyShowedChart(Country);
+    setSelectedIndex(index);
+  }, []);
   return (
     <AppContext.Provider
       value={{
@@ -109,16 +103,22 @@ const App = () => {
               subheader={
                 <ListSubheader component="div">Countries</ListSubheader>
               }
-              style={{ overflow: 'scroll', maxHeight: '100vh' }}
+              style={{
+                overflowX: 'hidden',
+                overflowY: 'scroll',
+                height: '70vh',
+              }}
             >
               {wasFound ? (
-                countriesToDisplay.map(({ Country, CountryCode }) => (
+                countriesToDisplay.map(({ Country, CountryCode }, index) => (
                   <CountriesListItem
                     key={CountryCode}
                     getDataForChart={getDataForChart}
                     country={Country}
                     showChart={currentlyShowedChart === Country}
                     onClick={handleChart}
+                    index={index}
+                    selectedIndex={selectedIndex}
                   />
                 ))
               ) : (

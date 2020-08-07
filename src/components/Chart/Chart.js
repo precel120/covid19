@@ -22,9 +22,9 @@ const Chart = () => {
       labels: [...dates],
       datasets: [
         {
-          label: 'Recovered',
-          data: [...recovered],
-          borderColor: '#3cba9f',
+          label: 'Confirmed',
+          data: [...confirmed],
+          borderColor: '#3e95cd',
           borderWitdh: 4,
           fill: false,
         },
@@ -36,9 +36,9 @@ const Chart = () => {
           fill: false,
         },
         {
-          label: 'Confirmed',
-          data: [...confirmed],
-          borderColor: '#3e95cd',
+          label: 'Recovered',
+          data: [...recovered],
+          borderColor: '#3cba9f',
           borderWitdh: 4,
           fill: false,
         },
