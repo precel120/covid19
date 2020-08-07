@@ -10,7 +10,8 @@ const Chart = () => {
   const recovered = [];
   const extractData = useCallback(() => {
     dataset.forEach((item) => {
-      dates.push(item.Date);
+      const tempDate = item.Date.split('T')[0];
+      dates.push(tempDate);
       confirmed.push(item.Confirmed);
       deaths.push(item.Deaths);
       recovered.push(item.Recovered);

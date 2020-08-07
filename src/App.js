@@ -127,7 +127,9 @@ const App = () => {
             </List>
           </Grid>
           <Grid item xs={9}>
-            <Chart />
+            <Container maxWidth="false" style={{ paddingLeft: '0' }}>
+              <Chart />
+            </Container>
           </Grid>
         </Grid>
       </div>
