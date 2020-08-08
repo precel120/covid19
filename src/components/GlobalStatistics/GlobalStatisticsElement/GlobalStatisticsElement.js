@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardContent, Typography } from '@material-ui/core';
+import PublicSharpIcon from '@material-ui/icons/PublicSharp';
 import PropTypes from 'prop-types';
 
 const GlobalStatisticsElement = ({ title, value, color }) => (
@@ -7,15 +8,24 @@ const GlobalStatisticsElement = ({ title, value, color }) => (
     style={{
       backgroundColor: color,
       color: 'white',
-      margin: '10px 15px',
+      margin: '10px 40px',
       height: '100%',
     }}
   >
-    <CardContent>
-      <Typography variant="h6" component="h2" gutterBottom>
-        {title} <br /> Globally
+    <CardContent style={{ padding: '15px 5px 10px 15px' }}>
+      <Typography
+        variant="subtitle1"
+        component="h3"
+        style={{ fontWeight: '600' }}
+      >
+        {title}
       </Typography>
-      <Typography variant="h4" component="h3">
+      <PublicSharpIcon fontSize="large" />
+      <Typography
+        variant="h4"
+        component="h3"
+        style={{ overflowWrap: 'break-word' }}
+      >
         {value}
       </Typography>
     </CardContent>

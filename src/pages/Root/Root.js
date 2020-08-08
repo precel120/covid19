@@ -18,7 +18,6 @@ const Root = () => {
   const [globalStats, setGlobalStats] = useState({});
   const [countries, setCountries] = useState([]);
   const [countriesToDisplay, setCountriesToDisplay] = useState([]);
-  const [wasFound, setWasFound] = useState(true);
   const [dataset, setDataset] = useState([]);
   const [currentlyShowedChart, setCurrentlyShowedChart] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -28,6 +27,27 @@ const Root = () => {
   });
 
   const currentDate = new Date();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      });
+    };
+    window.addEventListener('resize', handleResize);
+    const fetchData = async () => {
+      const response = await axios.get('https://api.covid19api.com/summary');
+      const { status, data } = response;
+      if (status === 200) {
+        const { Global, Countries } = data;
+        setGlobalStats({ ...Global });
+        setCountries([...Countries]);
+        setCountriesToDisplay([...Countries]);
+      }
+    };
+    fetchData();
+  }, []);
 
   const getDataForChart = useCallback(
     async (openedCountry) => {
@@ -43,27 +63,6 @@ const Root = () => {
     [countriesToDisplay, setDataset]
   );
 
-  useEffect(() => {
-    function handleResize() {
-      setDimensions({
-        height: window.innerHeight,
-        width: window.innerWidth,
-      });
-    }
-    window.addEventListener('resize', handleResize);
-    const fetchData = async () => {
-      const response = await axios.get('https://api.covid19api.com/summary');
-      const { status, data } = response;
-      if (status === 200) {
-        const { Global, Countries } = data;
-        setGlobalStats({ ...Global });
-        setCountries([...Countries]);
-        setCountriesToDisplay([...Countries]);
-      }
-    };
-    fetchData();
-  }, []);
-
   const findCountry = useCallback(
     (countryToFind) => {
       const foundCountries = countries.filter((country) =>
@@ -72,30 +71,22 @@ const Root = () => {
       if (foundCountries) {
         setCountriesToDisplay([...foundCountries]);
         setSelectedIndex(null);
-        if (!wasFound) setWasFound(true);
-      } else {
-        setWasFound(false);
       }
     },
-    [countries, setSelectedIndex, setCountriesToDisplay, wasFound, setWasFound]
+    [countries, setSelectedIndex, setCountriesToDisplay]
   );
 
   const resetSearch = useCallback(() => {
     setCountriesToDisplay([...countries]);
     setSelectedIndex(null);
-    if (!wasFound) setWasFound(true);
-  }, [
-    countries,
-    setSelectedIndex,
-    setCountriesToDisplay,
-    wasFound,
-    setWasFound,
-  ]);
+  }, [countries, setSelectedIndex, setCountriesToDisplay]);
 
   const handleChart = useCallback((event, Country, index) => {
-    setCurrentlyShowedChart(Country);
-    setSelectedIndex(index);
-  }, []);
+      setCurrentlyShowedChart(Country);
+      setSelectedIndex(index);
+    },
+    [setCurrentlyShowedChart, setSelectedIndex]
+  );
 
   return (
     <AppContext.Provider
@@ -109,7 +100,7 @@ const Root = () => {
     >
       <div>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} md={3}>
             <Typography
               variant="h4"
               component="h1"
@@ -118,17 +109,17 @@ const Root = () => {
               COVID-<span>19</span> statistics for {currentDate.toDateString()}
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={9}>
+          <Grid item xs={12} md={9}>
             <GlobalStatistics />
           </Grid>
-          {dimensions.width <= 600 && (
+          {dimensions.width <= 1000 && (
             <Grid item xs={12}>
               <Container style={{ paddingLeft: '0' }} maxWidth="xl">
                 <Chart />
               </Container>
             </Grid>
           )}
-          <Grid item xs={12} sm={5} md={3}>
+          <Grid item xs={12} sm={12} md={3}>
             <Box width="90%">
               <SearchInput />
             </Box>
@@ -144,22 +135,21 @@ const Root = () => {
                 height: '70vh',
               }}
             >
-              {wasFound &&
-                countriesToDisplay.map(({ Country, CountryCode }, index) => (
-                  <CountriesListItem
-                    key={CountryCode}
-                    getDataForChart={getDataForChart}
-                    country={Country}
-                    countryCode={CountryCode}
-                    showChart={currentlyShowedChart === Country}
-                    onClick={handleChart}
-                    index={index}
-                    selectedIndex={selectedIndex}
-                  />
-                ))}
+              {countriesToDisplay.map(({ Country, CountryCode }, index) => (
+                <CountriesListItem
+                  key={CountryCode}
+                  getDataForChart={getDataForChart}
+                  country={Country}
+                  countryCode={CountryCode}
+                  showChart={currentlyShowedChart === Country}
+                  onClick={handleChart}
+                  index={index}
+                  selectedIndex={selectedIndex}
+                />
+              ))}
             </List>
           </Grid>
-          {dimensions.width > 600 && (
+          {dimensions.width > 1000 && (
             <Grid item sm={7} md={9}>
               <Container
                 style={{ paddingLeft: '0', marginTop: '60px' }}
