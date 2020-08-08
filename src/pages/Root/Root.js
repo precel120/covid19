@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import {
   List,
@@ -22,7 +22,6 @@ import Chart from '../../components/Chart/Chart';
 const Root = () => {
   const [globalStats, setGlobalStats] = useState({});
   const [countries, setCountries] = useState([]);
-  const [countriesToDisplay, setCountriesToDisplay] = useState([]);
   const [dataset, setDataset] = useState([]);
   const [currentlyShowedChart, setCurrentlyShowedChart] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -49,11 +48,22 @@ const Root = () => {
         const { Global, Countries } = data;
         setGlobalStats({ ...Global });
         setCountries([...Countries]);
-        setCountriesToDisplay([...Countries]);
       }
     };
     fetchData();
   }, []);
+
+  const countriesToDisplay = useMemo(
+    () =>
+      countries.filter((country) =>
+        country.Country.toLowerCase().includes(searchInputValue.toLowerCase())
+      ),
+    [countries, searchInputValue]
+  );
+
+  const handleSearchInput = (e) => {
+    setSearchInputValue(e.target.value);
+  };
 
   const getDataForChart = useCallback(
     async (openedCountry) => {
@@ -69,31 +79,10 @@ const Root = () => {
     [countriesToDisplay, setDataset]
   );
 
-  const findCountry = useCallback(
-    (e) => {
-      setSearchInputValue(e.target.value);
-      const foundCountries = countries.filter((country) =>
-        country.Country.toLowerCase().includes(searchInputValue.toLowerCase())
-      );
-      if (foundCountries) {
-        setCountriesToDisplay([...foundCountries]);
-        setSelectedIndex(null);
-      }
-    },
-    [
-      searchInputValue,
-      setSearchInputValue,
-      countries,
-      setSelectedIndex,
-      setCountriesToDisplay,
-    ]
-  );
-
   const resetSearch = useCallback(() => {
-    setCountriesToDisplay([...countries]);
     setSearchInputValue('');
     setSelectedIndex(null);
-  }, [countries, setSelectedIndex, setCountriesToDisplay]);
+  }, [setSearchInputValue, setSelectedIndex]);
 
   const handleChart = useCallback(
     (Country, index) => {
@@ -107,7 +96,6 @@ const Root = () => {
     <AppContext.Provider
       value={{
         globalStats,
-        findCountry,
         resetSearch,
         countriesToDisplay,
         dataset,
@@ -141,21 +129,21 @@ const Root = () => {
           <Grid item xs={12} md={9}>
             <GlobalStatistics />
           </Grid>
-          {dimensions.width <= 1000 && (
+          {dimensions.width <= 1280 && (
             <Grid item xs={12}>
               <Container style={{ paddingLeft: '0' }} maxWidth="xl">
                 <Chart />
               </Container>
             </Grid>
           )}
-          <Grid item xs={12} sm={12} md={3}>
+          <Grid item xs={12} sm={12} md={12} lg={3}>
             <Box width="90%">
               <OutlinedInput
-                name="countryToFind"
                 autoComplete="off"
+                value={searchInputValue}
                 fullWidth
                 placeholder="Search"
-                onChange={findCountry}
+                onChange={handleSearchInput}
                 style={{ margin: '0 0 20px 15px' }}
                 endAdornment={
                   searchInputValue !== '' ? (
@@ -194,7 +182,7 @@ const Root = () => {
               ))}
             </List>
           </Grid>
-          {dimensions.width > 1000 && (
+          {dimensions.width > 1280 && (
             <Grid item sm={7} md={9}>
               <Container
                 style={{ paddingLeft: '0', marginTop: '60px' }}
