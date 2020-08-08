@@ -10,7 +10,7 @@ const GlobalStatistics = () => {
     return x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : undefined;
   };
   return (
-    <Container>
+    <Container style={{ margin: '10px 0 10px' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={4}>
           <GlobalStatisticsElement

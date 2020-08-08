@@ -102,31 +102,29 @@ const Root = () => {
     >
       <div>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={2}>
+          <Grid item xs={9} md={2} style={{ padding: '0' }}>
             <Typography
               variant="h3"
               component="h1"
-              style={{ margin: '30px 0 0 30px', fontWeight: '700' }}
+              style={{ margin: '25px 0 0 25px', fontWeight: '700' }}
             >
               COVID-<span>19</span>
             </Typography>
             <Typography
               variant="subtitle1"
               component="h2"
-              style={{ marginLeft: '30px', fontWeight: '600' }}
+              style={{ marginLeft: '25px', fontWeight: '600' }}
             >
               {currentDate.toDateString()}
             </Typography>
           </Grid>
-          {dimensions.width > 1250 && (
-            <Grid item md={1}>
-              <FontAwesomeIcon
-                icon={faVirus}
-                size="5x"
-                style={{ margin: '30px 5px' }}
-              />
-            </Grid>
-          )}
+          <Grid item xs={3} md={1} style={{ padding: '0' }}>
+            <FontAwesomeIcon
+              icon={faVirus}
+              size="5x"
+              style={{ margin: '30px 5px 30px 0' }}
+            />
+          </Grid>
           <Grid item xs={12} md={9}>
             <GlobalStatistics />
           </Grid>
