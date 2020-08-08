@@ -8,6 +8,8 @@ import {
   Typography,
   Box,
 } from '@material-ui/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faVirus } from '@fortawesome/free-solid-svg-icons';
 import GlobalStatistics from '../../components/GlobalStatistics/GlobalStatistics';
 import CountriesListItem from '../../components/CountriesListItem/CountriesListItem';
 import SearchInput from '../../components/SearchInput/SearchInput';
@@ -100,15 +102,31 @@ const Root = () => {
     >
       <div>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={2}>
             <Typography
-              variant="h4"
+              variant="h3"
               component="h1"
               style={{ margin: '30px 0 0 30px', fontWeight: '700' }}
             >
-              COVID-<span>19</span> statistics for {currentDate.toDateString()}
+              COVID-<span>19</span>
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              component="h2"
+              style={{ marginLeft: '30px', fontWeight: '600' }}
+            >
+              {currentDate.toDateString()}
             </Typography>
           </Grid>
+          {dimensions.width > 1250 && (
+            <Grid item md={1}>
+              <FontAwesomeIcon
+                icon={faVirus}
+                size="5x"
+                style={{ margin: '30px 5px' }}
+              />
+            </Grid>
+          )}
           <Grid item xs={12} md={9}>
             <GlobalStatistics />
           </Grid>

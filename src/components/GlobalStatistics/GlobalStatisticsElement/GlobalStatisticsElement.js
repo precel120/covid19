@@ -12,15 +12,20 @@ const GlobalStatisticsElement = ({ title, value, color }) => (
       height: '100%',
     }}
   >
-    <CardContent style={{ padding: '15px 5px 10px 15px' }}>
-      <Typography
-        variant="subtitle1"
-        component="h3"
-        style={{ fontWeight: '600' }}
+    <CardContent style={{ padding: '7px 5px 0px 15px' }}>
+      <div
+        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
       >
-        {title}
-      </Typography>
-      <PublicSharpIcon fontSize="large" />
+        <Typography
+          variant="subtitle1"
+          component="h3"
+          style={{ fontWeight: '600' }}
+        >
+          {title}
+        </Typography>
+        <div style={{ flexGrow: 1 }} />
+        <PublicSharpIcon fontSize="large" />
+      </div>
       <Typography
         variant="h4"
         component="h3"

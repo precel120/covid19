@@ -26,7 +26,11 @@ const CountriesListItem = ({
   return (
     <>
       <ListItem button onClick={handleClick} selected={selectedIndex === index}>
-        <ListItemText primary={<Typography>{country}</Typography>} />
+        <ListItemText
+          primary={
+            <Typography style={{ fontWeight: '600' }}>{country}</Typography>
+          }
+        />
         <ListItemAvatar>
           <Avatar
             src={`https://www.countryflags.io/${countryCode}/flat/64.png`}
