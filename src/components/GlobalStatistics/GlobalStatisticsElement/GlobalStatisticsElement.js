@@ -39,7 +39,7 @@ const GlobalStatisticsElement = ({ title, value, color }) => (
 
 GlobalStatisticsElement.propTypes = {
   title: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
   color: PropTypes.string,
 };
 

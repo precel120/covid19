@@ -16,13 +16,10 @@ const CountriesListItem = ({
   selectedIndex,
   countryCode,
 }) => {
-  const handleClick = useCallback(
-    (event) => {
-      onClick(event, country, index);
-      getDataForChart(country);
-    },
-    [index, onClick, getDataForChart, country]
-  );
+  const handleClick = useCallback(() => {
+    onClick(country, index);
+    getDataForChart(country);
+  }, [index, onClick, getDataForChart, country]);
   return (
     <>
       <ListItem button onClick={handleClick} selected={selectedIndex === index}>

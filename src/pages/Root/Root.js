@@ -7,12 +7,15 @@ import {
   Container,
   Typography,
   Box,
+  OutlinedInput,
+  IconButton,
+  InputAdornment,
 } from '@material-ui/core';
+import ClearSharpIcon from '@material-ui/icons/ClearSharp';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVirus } from '@fortawesome/free-solid-svg-icons';
 import GlobalStatistics from '../../components/GlobalStatistics/GlobalStatistics';
 import CountriesListItem from '../../components/CountriesListItem/CountriesListItem';
-import SearchInput from '../../components/SearchInput/SearchInput';
 import AppContext from '../../context';
 import Chart from '../../components/Chart/Chart';
 
@@ -23,6 +26,7 @@ const Root = () => {
   const [dataset, setDataset] = useState([]);
   const [currentlyShowedChart, setCurrentlyShowedChart] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [searchInputValue, setSearchInputValue] = useState('');
   const [dimensions, setDimensions] = React.useState({
     height: window.innerHeight,
     width: window.innerWidth,
@@ -66,24 +70,33 @@ const Root = () => {
   );
 
   const findCountry = useCallback(
-    (countryToFind) => {
+    (e) => {
+      setSearchInputValue(e.target.value);
       const foundCountries = countries.filter((country) =>
-        country.Country.includes(countryToFind)
+        country.Country.toLowerCase().includes(searchInputValue.toLowerCase())
       );
       if (foundCountries) {
         setCountriesToDisplay([...foundCountries]);
         setSelectedIndex(null);
       }
     },
-    [countries, setSelectedIndex, setCountriesToDisplay]
+    [
+      searchInputValue,
+      setSearchInputValue,
+      countries,
+      setSelectedIndex,
+      setCountriesToDisplay,
+    ]
   );
 
   const resetSearch = useCallback(() => {
     setCountriesToDisplay([...countries]);
+    setSearchInputValue('');
     setSelectedIndex(null);
   }, [countries, setSelectedIndex, setCountriesToDisplay]);
 
-  const handleChart = useCallback((event, Country, index) => {
+  const handleChart = useCallback(
+    (Country, index) => {
       setCurrentlyShowedChart(Country);
       setSelectedIndex(index);
     },
@@ -137,7 +150,23 @@ const Root = () => {
           )}
           <Grid item xs={12} sm={12} md={3}>
             <Box width="90%">
-              <SearchInput />
+              <OutlinedInput
+                name="countryToFind"
+                autoComplete="off"
+                fullWidth
+                placeholder="Search"
+                onChange={findCountry}
+                style={{ margin: '0 0 20px 15px' }}
+                endAdornment={
+                  searchInputValue !== '' ? (
+                    <InputAdornment>
+                      <IconButton type="button" onClick={resetSearch}>
+                        <ClearSharpIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ) : null
+                }
+              />
             </Box>
             <List
               subheader={
