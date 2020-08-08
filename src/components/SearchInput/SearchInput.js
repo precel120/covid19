@@ -2,9 +2,8 @@ import React, { useState, useContext, useCallback } from 'react';
 import { OutlinedInput, IconButton, InputAdornment } from '@material-ui/core';
 import ClearSharpIcon from '@material-ui/icons/ClearSharp';
 import AppContext from '../../context';
-import styles from './SearchForm.module.scss';
 
-const SearchForm = () => {
+const SearchInput = () => {
   const [countryName, setCountryName] = useState('');
   const { findCountry, resetSearch } = useContext(AppContext);
   const handleReset = useCallback(
@@ -13,7 +12,7 @@ const SearchForm = () => {
       resetSearch();
       setCountryName('');
     },
-    [resetSearch]
+    [resetSearch, setCountryName]
   );
   const handleInput = useCallback(
     (e) => {
@@ -24,27 +23,25 @@ const SearchForm = () => {
     [findCountry, setCountryName, countryName]
   );
   return (
-    <div className={styles.wrapper}>
-      <OutlinedInput
-        name="countryToFind"
-        autoComplete="off"
-        fullWidth
-        placeholder="Search"
-        value={countryName}
-        onChange={handleInput}
-        style={{ margin: '0 0 20px 15px' }}
-        endAdornment={
-          countryName !== '' ? (
-            <InputAdornment>
-              <IconButton type="button" onClick={handleReset}>
-                <ClearSharpIcon />
-              </IconButton>
-            </InputAdornment>
-          ) : null
-        }
-      />
-    </div>
+    <OutlinedInput
+      name="countryToFind"
+      autoComplete="off"
+      fullWidth
+      placeholder="Search"
+      value={countryName}
+      onChange={handleInput}
+      style={{ margin: '0 0 20px 15px' }}
+      endAdornment={
+        countryName !== '' ? (
+          <InputAdornment>
+            <IconButton type="button" onClick={handleReset}>
+              <ClearSharpIcon />
+            </IconButton>
+          </InputAdornment>
+        ) : null
+      }
+    />
   );
 };
 
-export default SearchForm;
+export default SearchInput;

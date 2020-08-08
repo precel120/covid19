@@ -42,8 +42,12 @@ CountriesListItem.propTypes = {
   country: PropTypes.string.isRequired,
   getDataForChart: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
-  selectedIndex: PropTypes.number.isRequired,
+  selectedIndex: PropTypes.number,
   countryCode: PropTypes.string.isRequired,
+};
+
+CountriesListItem.defaultProps = {
+  selectedIndex: null,
 };
 
 export default CountriesListItem;

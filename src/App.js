@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import GlobalStatistics from './components/GlobalStatistics/GlobalStatistics';
 import CountriesListItem from './components/CountriesListItem/CountriesListItem';
-import SearchForm from './components/SearchForm/SearchForm';
+import SearchInput from './components/SearchInput/SearchInput';
 import AppContext from './context';
 import Chart from './components/Chart/Chart';
 
@@ -62,8 +62,6 @@ const App = () => {
       }
     };
     fetchData();
-    // getDataForChart("Afghanistan");
-    // setCurrentlyShowedChart(countries[0].Country);
   }, []);
 
   const findCountry = useCallback(
@@ -75,30 +73,20 @@ const App = () => {
         setCountriesToDisplay([...foundCountries]);
         setSelectedIndex(null);
         if (!wasFound) setWasFound(true);
-        // getDataForChart(countryToFind);
-        // setCurrentlyShowedChart(countryToFind);
       } else {
         setWasFound(false);
       }
     },
-    [
-      countries,
-      setCurrentlyShowedChart,
-      setCountriesToDisplay,
-      wasFound,
-      setWasFound,
-    ]
+    [countries, setSelectedIndex, setCountriesToDisplay, wasFound, setWasFound]
   );
 
   const resetSearch = useCallback(() => {
     setCountriesToDisplay([...countries]);
     setSelectedIndex(null);
-    // getDataForChart(countries[0].Country);
-    // setCurrentlyShowedChart(countries[0].Country);
     if (!wasFound) setWasFound(true);
   }, [
     countries,
-    setCurrentlyShowedChart,
+    setSelectedIndex,
     setCountriesToDisplay,
     wasFound,
     setWasFound,
@@ -140,9 +128,9 @@ const App = () => {
               </Container>
             </Grid>
           )}
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={5} md={3}>
             <Box width="90%">
-              <SearchForm />
+              <SearchInput />
             </Box>
             <List
               subheader={
@@ -172,8 +160,11 @@ const App = () => {
             </List>
           </Grid>
           {dimensions.width > 600 && (
-            <Grid item sm={9}>
-              <Container style={{ paddingLeft: '0' }} maxWidth="xl">
+            <Grid item sm={7} md={9}>
+              <Container
+                style={{ paddingLeft: '0', marginTop: '60px' }}
+                maxWidth="xl"
+              >
                 <Chart />
               </Container>
             </Grid>
